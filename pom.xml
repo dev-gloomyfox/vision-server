@@ -22,12 +22,27 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<java.library.path>${project.basedir}/lib</java.library.path>
+		<tess4j.version>3.3.1</tess4j.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.opencv</groupId>
+			<artifactId>opencv</artifactId>
+			<version>3.2.0</version>
+			<scope>system</scope>
+			<systemPath>${java.library.path}/opencv-3.2.0-x64/opencv-320.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.tess4j</groupId>
+			<artifactId>tess4j</artifactId>
+			<version>${tess4j.version}</version>
 		</dependency>
 
 		<dependency>
@@ -45,6 +60,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
 
 </project>
