@@ -1,14 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>vision project</title>
-<link rel="stylesheet" href="/lib/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="/lib/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/lib/bootstrap-3.3.7-dist/css/bootstrap.css">
+<link rel="stylesheet" href="/lib/bootstrap-3.3.7-dist/css/bootstrap-theme.css">
 </head>
 <body>
-
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">Histogram Equalization</div>
+			      	
+			      	<div class="panel-body">
+						<form id="eqhist" enctype="multipart/form-data">
+							<div class="input-group">
+					      		<input class="form-control" name="hist" id="hist" type="file" />
+					      		<span class="input-group-btn">
+					      			<button class="btn btn-default" type="button" onclick="eqhistSubmit()">SUBMIT</button>
+	      						</span>
+					      	</div>
+				      	</form>
+				      	<div class="row">
+					      	<div class="col-md-6" id="hist-source">
+					      		<img id="hist-source-img" class="img-responsive" src="" />
+					      	</div>
+							<div class="col-md-6" id="hist-result">
+								<img id="hist-result-img" class="img-responsive" src="" />
+							</div>
+						</div>
+					</div>
+			   </div>
+		   </div>
+	   </div>
+   </div>
 </body>
 <script src="/lib/jquery-3.2.1.min.js"></script>
-<script src="/lib/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="/lib/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script>
+function eqhistSubmit() {
+var form = $("#eqhist")[0];
+var formData = new FormData(form);
+
+formData.append("image", $("#hist")[0].files[0]);
+
+$.ajax({
+		url: "/vision/histeq",
+		type: "POST",
+		data: formData,
+		contentType: false,
+		processData: false,
+		success: function(data) {
+			$("#hist-result-img").attr("src", "data:image/png;base64," + data.hist);
+		}
+	});
+}
+
+
+function readURL(input, id) {
+	if(input.files && input.files[0]) {
+    	var reader = new FileReader();
+
+    	reader.onload = function (e) {
+        	$(id).attr("src", e.target.result);
+   		}
+
+   	 reader.readAsDataURL(input.files[0]);
+	}
+}
+
+$("#hist").change(function(){
+    readURL(this, "#hist-source-img");
+});
+</script>
 </html>
