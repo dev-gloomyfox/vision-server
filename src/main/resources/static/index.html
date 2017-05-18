@@ -11,6 +11,36 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
+					<div class="panel-heading">Convert Color</div>
+			      	
+			      	<div class="panel-body row">
+						<form id="colorcvt" enctype="multipart/form-data">
+					      	<div class="col-md-12">
+								<div class="input-group">
+						      		<input class="form-control" name="cvt" id="cvt" type="file" />
+						      		<div class="input-group-addon">
+										<select name="code">
+											<option value="6">GRAY</option>
+										</select>
+									</div>
+						      		<span class="input-group-btn">
+						      			<button class="btn btn-default" type="button" onclick="cvtSubmit()">SUBMIT</button>
+		      						</span>
+						      	</div>
+					      	</div>
+				      	</form>
+				      	<div class="row">
+					      	<div class="col-md-6" id="cvt-source">
+					      		<img id="cvt-source-img" class="img-responsive" src="" />
+					      	</div>
+							<div class="col-md-6" id="cvt-result">
+								<img id="cvt-result-img" class="img-responsive" src="" />
+							</div>
+						</div>
+					</div>
+			   </div>
+			   
+				<div class="panel panel-default">
 					<div class="panel-heading">Histogram Equalization</div>
 			      	
 			      	<div class="panel-body">
@@ -39,24 +69,44 @@
 <script src="/lib/jquery-3.2.1.min.js"></script>
 <script src="/lib/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
 <script>
-function eqhistSubmit() {
-var form = $("#eqhist")[0];
-var formData = new FormData(form);
 
-formData.append("image", $("#hist")[0].files[0]);
+//TODO: When the input data is not good, the user should be notified and the web call should not be performed. 
 
-$.ajax({
-		url: "/vision/histeq",
-		type: "POST",
-		data: formData,
-		contentType: false,
-		processData: false,
-		success: function(data) {
-			$("#hist-result-img").attr("src", "data:image/png;base64," + data.hist);
-		}
-	});
+function cvtSubmit() {
+	var form = $("#colorcvt")[0];
+	var formData = new FormData(form);
+
+	formData.append("image", $("#cvt")[0].files[0]);
+
+	$.ajax({
+			url: "/vision/colorcvt",
+			type: "POST",
+			data: formData,
+			contentType: false,
+			processData: false,
+			success: function(data) {
+				$("#cvt-result-img").attr("src", "data:image/png;base64," + data.cvt);
+			}
+		});
 }
 
+function eqhistSubmit() {
+	var form = $("#eqhist")[0];
+	var formData = new FormData(form);
+
+	formData.append("image", $("#hist")[0].files[0]);
+
+	$.ajax({
+			url: "/vision/histeq",
+			type: "POST",
+			data: formData,
+			contentType: false,
+			processData: false,
+			success: function(data) {
+				$("#hist-result-img").attr("src", "data:image/png;base64," + data.hist);
+			}
+		});
+}
 
 function readURL(input, id) {
 	if(input.files && input.files[0]) {
@@ -69,6 +119,12 @@ function readURL(input, id) {
    	 reader.readAsDataURL(input.files[0]);
 	}
 }
+
+//TODO: Need to initialize the img tag at the time of the change event, and If file not selected, should be able to write the existing file.
+
+$("#cvt").change(function(e) {
+	readURL(this, "#cvt-source-img");
+})
 
 $("#hist").change(function(){
     readURL(this, "#hist-source-img");

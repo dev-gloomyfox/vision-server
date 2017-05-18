@@ -2,6 +2,11 @@ package com.gloomyfox.vision.util;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+
+import javax.imageio.ImageIO;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -10,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MatUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MatUtil.class);
+public class ImageUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ImageUtil.class);
 	/**
 	 * Convert BufferedImage Object to Mat Object
 	 * @param image
@@ -89,5 +94,20 @@ public class MatUtil {
 		BufferedImage image = new BufferedImage(cols, rows, type);
 		image.getRaster().setDataElements(0, 0, cols, rows, data);
 		return image;
+	}
+	
+	/**
+	 * Convert BufferedImage to Base64 String
+	 * @param bi
+	 * @return
+	 * @throws IOException
+	 */
+	public String bufferedImageToBase64(BufferedImage bi) throws IOException {
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		ImageIO.write(bi, "png", os);
+		byte[] bytes = os.toByteArray();
+		
+		String base64 = Base64.getEncoder().encodeToString(bytes);
+		return base64;
 	}
 }

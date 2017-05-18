@@ -23,10 +23,11 @@ public class VisionRestController {
 	@Autowired
 	private ProcessingService processingService;
 	
-	@RequestMapping(path="/colorcv", method=RequestMethod.POST)
+	@RequestMapping(path="/colorcvt", method=RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> convertColor(@RequestParam(value="image", required=true) MultipartFile image, int code) {
-		return null;
+	public Map<String, Object> convertColor(@RequestParam(value="image", required=true) MultipartFile image, int code) throws IOException {
+		BufferedImage bi = ImageIO.read(image.getInputStream());
+		return processingService.convertColor(bi, code);
 	}
 	
 	@RequestMapping(path="/histeq", method=RequestMethod.POST)
