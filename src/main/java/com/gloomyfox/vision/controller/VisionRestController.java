@@ -118,4 +118,10 @@ public class VisionRestController {
 			@RequestParam(value="whitelist", required=false) String whitelist) {
 		return null;
 	}
+	
+	@RequestMapping(path="/textbi")
+	public Map<String, Object> binarizeText(@RequestParam(value="image", required=true) MultipartFile image) throws IOException {
+		BufferedImage bi = ImageIO.read(image.getInputStream());
+		return processingService.binarizeText(bi);
+	}
 }
